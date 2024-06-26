@@ -1,54 +1,62 @@
 import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
-import {sendEmail} from "./utils/sendEmail.js"
-
+import { sendEmail } from "./utils/sendEmail.js";
 
 const app = express();
 const router = express.Router();
 
-config({path: "./config.env"});
+config({ path: "./config.env" });
 
 app.use(cors({
     origin: [process.env.FRONTEND_URL],
-    methods: ["POST"],
+    methods: ["POST", "GET"], // Add GET to allowed methods
     credentials: true
-}))
+}));
 
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-router.post("/send/mail", async(req,res,next)=>{
-    const {name, email, message} = req.body;
-    if(!name || !email || !message){
-        return next(res.status(400).json({
+// POST endpoint to send email
+router.post("/send/mail", async (req, res, next) => {
+    const { name, email, message } = req.body;
+    if (!name || !email || !message) {
+        return res.status(400).json({
             success: false,
             message: "Please provide all details"
-        }))
+        });
     }
     try {
         await sendEmail({
             email: "mk5980868@gmail.com",
             subject: "GYM WEBSITE CONTACT",
             message,
-            userEmil: email,
-        })
+            userEmail: email,
+        });
         res.status(200).json({
             success: true,
             message: "Message Sent Successfully."
-        })
+        });
     } catch (error) {
         res.status(500).json({
             success: false,
             message: "Internal Server Error"
-        })
+        });
     }
-})
+});
 
-app.use(router)
+// GET endpoint for /send/mail
+router.get("/send/mail", (req, res) => {
+    res.status(405).json({
+        success: false,
+        message: "GET method not allowed. Use POST instead."
+    });
+});
 
-const PORT = process.env.PORT || 4000; 
+app.use(router);
 
-app.listen(PORT, ()=>{
-    console.log(`Server listening at port ${process.env.PORT}`)
-})
+const PORT = process.env.PORT || 4000;
+
+app.listen(PORT, () => {
+    console.log(`Server listening at port ${PORT}`);
+});
