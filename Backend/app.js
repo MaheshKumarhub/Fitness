@@ -47,7 +47,7 @@ router.post("/send/mail", async(req,res,next)=>{
 
 app.use(router)
 
-const PORT = process.env.PORT || 4000; 
+const PORT = process.env.PORT || 10000; 
 
 app.listen(PORT, ()=>{
     console.log(`Server listening at port ${process.env.PORT}`)
