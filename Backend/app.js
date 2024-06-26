@@ -59,8 +59,4 @@ const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
     console.log(`Server listening at port ${PORT}`);
-<<<<<<< HEAD
 });
-=======
-});
->>>>>>> de33600145d9b85c3ed652719f5102290846bbd7
